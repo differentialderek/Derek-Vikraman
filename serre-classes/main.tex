@@ -1,0 +1,157 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{xcolor,amsfonts,amsmath,amsthm,amssymb,enumitem,hyperref,comment} 
+\usepackage{tikz-cd}
+
+\newcommand{\aut}{\textrm{Aut}}
+\newcommand{\C}{$\mathcal{C} \:$}
+\newcommand{\Cc}{$\mathcal{C}$}
+\newcommand{\Cm}{\mathcal{C}}
+\newcommand{\univ}{\mathcal{U}}
+\newcommand{\question}[1]{\noindent \textcolor{red}{\textbf{Question:} #1}}
+\newcommand{\note}{\noindent \textbf{\textit{Note:}} $\:$}
+\newcommand{\define}[1]{\noindent \textbf{Definition.} \textit{(#1)} $\:$}
+\newcommand{\n}{\mathbb{N}}
+\newcommand{\z}{\mathbb{Z}}
+\newcommand{\Univ}{\mathcal{U}}
+\newcommand{\Univfg}{\mathcal{U}_{\textrm{fg}}}
+\newcommand{\Univf}{\mathcal{U}_{\textrm{f}}}
+\newcommand{\0}{\mathbf{0}}
+\newcommand{\1}{\mathbf{1}}
+\newcommand{\defequiv}{: \equiv}
+\newcommand{\defeq}{:=}
+\newcommand{\inv}{^{-1}}
+\newcommand{\eone}{^1}
+\newcommand{\etwo}{^2}
+\newcommand{\pr}{^\prime}
+\newcommand{\fg}{\z_}%FG_{ab}}
+\newcommand{\fib}{\textrm{fib}}
+\newcommand{\inj}{\hookrightarrow}
+\newcommand{\surj}{\twoheadrightarrow}
+\newcommand{\sone}{\mathbb{S}^1}
+\newcommand{\stwo}{\mathbb{S}^2}
+\newcommand{\sthree}{\mathbb{S}^3}
+\newcommand{\base}{\textrm{base}}
+\newcommand{\Loop}{\textrm{loop}}
+\newcommand{\cone}{\textrm{cone}}
+\newcommand{\SES}{\textrm{SE}\mathbb{S}}
+\newcommand{\isexact}{\textrm{is-exact}}
+\newcommand{\V}{\textrm{V}}
+
+\newtheorem{lemma}{Lemma}
+
+
+\title{Serre Classes}
+\date{February 2020}
+
+\begin{document}
+
+\maketitle
+
+\section{Free Group and Free Abelian Group}
+
+Free groups and free abelian groups can be defined with the functions:
+
+$$ \otimes_\_ \sone : \n \to \Univ, 0 \mapsto \1, (n+1) \mapsto \sone \times (\otimes_n \sone) $$
+
+
+$$ \vee_\_ \sone : \n \to \Univ, 0 \mapsto \1, (n+1) \mapsto \sone \times (\vee_n \sone) $$
+
+Then the type representing finitely generated abelian groups is 
+$$ \Univfg \defequiv \Sigma_{B : \Univ} || \Sigma_{n : \n} \Sigma_{f : \otimes_n \sone \to B} \textrm{is-surj}(f) ||_{-1} $$
+and the type representing finitely generated groups is 
+$$ \Univf \defequiv \Sigma_{B : \Univ} || \Sigma_{n : \n} \Sigma_{f : \vee_n \sone \to B} \textrm{is-surj}(f) ||_{-1} $$
+
+\section{Serre Class}
+Consider $$ \1 \to A \to B \to C \to \1$$ and let $(B, \omega_B) : \Univfg$. Then there's a surjection $\pi_B : \otimes_n \sone \surj B$. To show that $(A, \omega_A) : \Univfg$ and $(C, \omega_C) : \Univfg$ we need to provide $\omega_A$ and $\omega_C$. We get $\omega_C$ for free by composing $$ \otimes_n \sone \surj B \surj C.$$
+
+For $\omega_A$, consider the pullback square
+
+\begin{center}
+\begin{tikzcd}
+    P \arrow[d] \arrow[r] & \otimes_n \sone \arrow[d,twoheadrightarrow] \\
+    A \arrow[r,hook] & B
+\end{tikzcd}
+\end{center}
+
+\textcolor{red}{Since pullbacks preserve epis and monos}, we get $P \inj \otimes_n \sone$ and $P \surj A$. \textcolor{red}{Since a subgroup of a free abelian group is free}, $P = \otimes_k \sone$ for some $k : \n$ and we have $\omega_A$ via the surjection $P \surj A$.
+
+Going the other way, given $(A, \omega_A)$ and $(C, \omega_C)$, we get the diagram
+
+\begin{center}
+\begin{tikzcd}
+    \otimes_{k\prime} \sone \arrow[d,twoheadrightarrow] & & \otimes_{k^{\prime\prime\prime}} \sone \arrow[d,twoheadrightarrow] \\
+    A \arrow[r,hook] & B \arrow[r,twoheadrightarrow] & C
+\end{tikzcd}
+\end{center}
+
+
+To construct a surjection $\otimes_{k^{\prime\prime}} \sone \surj B$, $k^{\prime\prime} = k\pr + k^{\prime \prime \prime}$ \textcolor{red}{recognize that $B = \Sigma_{c : C} A$}. Then the surjection $\otimes_{k^{\prime\prime}} \sone = \otimes_{k^{\prime}} \sone \times \otimes_{k^{\prime\prime\prime}} \sone \surj B$ is just given by $(s_1,s_2) \mapsto (\pi_A(s_1), \pi_C(s_2))$, where $\pi_A,\pi_C$ are, respectively, the surjections onto $A$ and $C$.
+
+\textcolor{red}{Note that this construction defines a mapping between particular surjections, so you may be able to get away without truncating (?).}
+
+\begin{lemma}
+Pullbacks preserve epis and monos.
+\end{lemma}
+
+\begin{lemma}
+A subgroup of a free abelian group is free.
+\end{lemma}
+
+\begin{lemma}
+If $B$ is an extension of $C$ by $A$, then $B = \Sigma_{c : C} A$.
+\end{lemma}
+
+\section{Free Groups}
+Note that none of the proof above used the fact that anything was abelian, except in the existence of a surjection. This should generalize to other things, then, such as free groups, or anything defined freely by use of a surjection. This are of interest in algebraic structures.
+
+\section{Next}
+\begin{itemize}
+    \item Prove the lemmas
+    \item Give a more general categorical exposition of the notion of a Serre class, which "generalizes 0"
+    \item Look at the other properties, such as Tor.
+\end{itemize}
+
+
+\begin{comment}
+\section{Definition of $\z_k$ with $\sone$}
+We define a finite cyclig group of order $k : \n$, written $\z_k$, giving a map $\n \to \Univ$. Note that $B(\z_k)$ (can be?) defined as:
+\begin{itemize}
+\item $\base : \z_k$
+\item $\Loop : \base =_{\z_k} \base$
+\item $\cone : \Loop^k = \Loop$
+\end{itemize}
+We define $\z_k \defequiv || B(\z_k) ||_1$
+
+
+It is straightforward (though probably difficult formally?) to show that $$ \1 \to \sone \to \sone \to \z_k \to \1 $$ is exact.
+
+
+\section{Finitely Generated Abelian Groups}
+
+We want to get at the concept of finitely generated abelian groups. Classically, $G$ is finitely generated precisely when there is a short exact sequence of the form $$ \0 \to \z^m \to \z^n \to G \to \0.$$
+We can define an object that will, ideally, behave similarly. We can define a map $\otimes_\_ \sone: \n \to \Univ$ which maps $0 \mapsto \1$ and $n+1 \mapsto \sone \times \otimes_n \sone$. We'd like to define a subuniverse $\Univfg$ which behaves like finitely generated abelian groups, with the eventual goal of showing that $\pi_k (\mathbb{S}^n)$ is in this subuniverse for all $n,k : \n$.
+
+The short exact sequence that behaves similarly to the classical version will then have the following form:
+$$\1 \to \otimes_m \sone \to \otimes_n \sone \to B \to \1$$
+So we say $B$ is a ``finitely generated abelian group'' if there is some short of exact sequence of this form. If $\omega$ is such a witness, then $(B,\omega) : \Univfg$.
+
+We define $\Univfg$, then to be the type $$ \Univfg \defequiv \Sigma_{B : \Univ} || \SES(m,n,B) ||_{-1}$$
+where $\SES$ is defined to be the type 
+$$\SES \defequiv \Sigma_{m,n : \n} \Sigma_{B : \Univ} \Sigma_{f : \otimes_m \sone \to \otimes_n \sone} \Sigma_{g: \otimes_n \sone \to B} \textrm{is-exact}(m,n,B,f,g)$$
+and $\isexact$ is a map \textcolor{red}{(needs to be defined)} that shows a sequence to be short exact.
+
+\section{Questions}
+
+Main question:
+\begin{itemize}
+\item Define isSerreClass (should be a proposition)
+\item Is $\Univfg$ a Serre class? i.e. 
+\item Can we prove the universal property that if $\1 \to \otimes_m \sone \to \otimes_n \sone \to B \to \1$ is exact, then for any $A : \Univ$ such that $\1 \to \otimes_m \sone \to \otimes_n \sone \to A$ is exact, there is a unique embedding of $B \inj A$?
+\end{itemize}
+
+\end{comment}
+
+
+
+\end{document}
