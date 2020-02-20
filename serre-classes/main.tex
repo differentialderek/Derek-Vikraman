@@ -37,16 +37,23 @@
 \newcommand{\SES}{\textrm{SE}\mathbb{S}}
 \newcommand{\isexact}{\textrm{is-exact}}
 \newcommand{\V}{\textrm{V}}
+\newcommand{\ap}[1]{\textrm{ap}_{#1}}
+\newcommand{\id}{\textrm{id}}
+\newcommand{\TODO}[1]{\marginpar{\textcolor{blue}{#1}}}
+\newcommand{\refl}{\textrm{refl}}
 
 \newtheorem{lemma}{Lemma}
 
 
-\title{Serre Classes}
+\title{Serre Classes in Homotopy Type Theory}
 \date{February 2020}
 
 \begin{document}
 
 \maketitle
+
+\section{Introduction}
+Serre classes are important in ... 
 
 \section{Free Group and Free Abelian Group}
 
@@ -58,52 +65,86 @@ $$ \otimes_\_ \sone : \n \to \Univ, 0 \mapsto \1, (n+1) \mapsto \sone \times (\o
 $$ \vee_\_ \sone : \n \to \Univ, 0 \mapsto \1, (n+1) \mapsto \sone \times (\vee_n \sone) $$
 
 Then the type representing finitely generated abelian groups is 
-$$ \Univfg \defequiv \Sigma_{B : \Univ} || \Sigma_{n : \n} \Sigma_{f : \otimes_n \sone \to B} \textrm{is-surj}(f) ||_{-1} $$
+$$ \Univfg \defequiv \Sigma_{B : \Univ} || \Sigma_{n : \n} \Sigma_{f : \otimes_n \sone \to B} \textrm{is-surj}(\ap{f}) ||_{-1} $$
 and the type representing finitely generated groups is 
-$$ \Univf \defequiv \Sigma_{B : \Univ} || \Sigma_{n : \n} \Sigma_{f : \vee_n \sone \to B} \textrm{is-surj}(f) ||_{-1} $$
+$$ \Univf \defequiv \Sigma_{B : \Univ} || \Sigma_{n : \n} \Sigma_{f : \vee_n \sone \to B} \textrm{is-surj}(\ap{f}) ||_{-1} $$
 
-\section{Serre Class}
-Consider $$ \1 \to A \to B \to C \to \1$$ and let $(B, \omega_B) : \Univfg$. Then there's a surjection $\pi_B : \otimes_n \sone \surj B$. To show that $(A, \omega_A) : \Univfg$ and $(C, \omega_C) : \Univfg$ we need to provide $\omega_A$ and $\omega_C$. We get $\omega_C$ for free by composing $$ \otimes_n \sone \surj B \surj C.$$
+\section{Exactness and Exact Sequences}
+A \textit{group} is defined to be a pointed, 1-connected type $(B,b_0)$ such that $(b_0 = b_0)$ is a set. A \textit{short exact sequence} of abelian \TODO{Does it make sense to take out ``abelian''?} groups is a sequence of maps $$ \1 \to A \to B \to C \to \1 $$ such that for the induced maps $$ (* = *) \to (a_0 = a_0) \to (b_0 = b_0) \to (c_0 = c_0) \to (* = *)$$ the kernel of each map is equivalent to the image of the map before it.
 
-For $\omega_A$, consider the pullback square
+\section{$\Univfg$ is a Serre Class}
+Consider the short exact sequence $$ \1 \to A \to B \to C \to \1.$$ We will show that there is a witness $\omega_B$ such that $(B, \omega_B) : \Univfg$ if and only if there are witnesses $\omega_A$ and $\omega_C$ such that $(A, \omega_A) : \Univfg$ and $(C, \omega_C) : \Univfg$. This shows that $\Univfg$ has the properties classically known to be those of \textit{Serre classes}.
 
+To that end, let $(B, \omega_B) : \Univfg$. Then $\omega_B$ gives a map $\pi_B : \otimes_n \sone \to B$ such that $\ap{\pi_B}$ surjects. To show our result we need to provide maps $\pi_A$ and $\pi_C$ such that $\ap{\pi_A}$ and $\ap{\pi_C}$ are surjections. The latter of these we get for free by composing $$ \otimes_n \sone \to B \to C.$$
+To construct $\pi_A$, consider the pullback square
 \begin{center}
 \begin{tikzcd}
-    P \arrow[d] \arrow[r] & \otimes_n \sone \arrow[d,twoheadrightarrow] \\
-    A \arrow[r,hook] & B
+    %A \times_B \otimes_n \sone 
+    P \arrow[d,swap,"\ap{g}^*"] \arrow[r,"\ap{f}^*"] & \base =_{\otimes_n \sone} \base \arrow[d,"\ap{g}",twoheadrightarrow] \\
+    a_0 =_A a_0 \arrow[r,swap,hook,"\ap{f}"] & b_0 =_B b_0
 \end{tikzcd}
 \end{center}
-
-\textcolor{red}{Since pullbacks preserve epis and monos}, we get $P \inj \otimes_n \sone$ and $P \surj A$. \textcolor{red}{Since a subgroup of a free abelian group is free}, $P = \otimes_k \sone$ for some $k : \n$ and we have $\omega_A$ via the surjection $P \surj A$.
+such that $\ap{f}$ is an embedding and $\ap{g}$ is a surjection. Applying Lemma \ref{lemma: pullback} to ap$_f$ and ap$_g$, we get $\textrm{inj}_A : P \inj (\base =_{\otimes_n \sone} \base)$ and $\textrm{surj}_A : P \surj (a_0 =_A a_0)$. Then \textcolor{red}{Lemma \ref{lemma: subgroup of free abelian}} gives us an inhabitant of $P \cong (\base =_{\otimes_k \sone} \base)$ for some $k : \n$. We construct our desired map $\omega_A\pr : \otimes_k \sone \to A$ via $\textrm{surj}_A$, yielding $\omega_A$.
 
 Going the other way, given $(A, \omega_A)$ and $(C, \omega_C)$, we get the diagram
 
 \begin{center}
 \begin{tikzcd}
-    \otimes_{k\prime} \sone \arrow[d,twoheadrightarrow] & & \otimes_{k^{\prime\prime\prime}} \sone \arrow[d,twoheadrightarrow] \\
-    A \arrow[r,hook] & B \arrow[r,twoheadrightarrow] & C
+    (\base =_{\otimes_{k\prime} \sone} \base) \arrow[d,twoheadrightarrow] & & (\base =_{\otimes_{k^{\prime\prime\prime}} \sone} \base) \arrow[d,twoheadrightarrow] \\
+    (a_0 =_A a_0) \arrow[r,hook] & (b_0 =_B b_0) \arrow[r,twoheadrightarrow] & (c_0 =_C c_0)
 \end{tikzcd}
 \end{center}
+To construct a map in $\otimes_{k^{\prime\prime}} \sone \to B$, $k^{\prime\prime} = k\pr + k^{\prime \prime \prime}$, which yields a surjection in $(\base =_{\otimes_{k^{\prime\prime\prime}} \sone} \base) \to (b_0 =_B b_0)$, by \textcolor{red}{Lemma \ref{lemma: group extension}} we have $$(b_0 =_B b_0) = \Sigma_{c : (c_0 =_C c_0)} (a_0 =_A a_0).$$Then the surjection in $$(\base =_{\otimes_{k^{\prime\prime\prime}} \sone} \base) \to (b_0 =_B b_0)$$ is just given by composition with \textcolor{red}{\textbf{the} equivalence in $$(\base =_{(\otimes_{k^{\prime}} \sone \times \otimes_{k^{\prime\prime\prime}} \sone)} \base) \cong (\base =_{\otimes_{k^{\prime\prime\prime}} \sone} \base)$$}and $(s_1,s_2) \mapsto (\ap{\pi_A}(s_1), \ap{\pi_C}(s_2))$, where $\ap{\pi_A},\ap{\pi_C}$ are, respectively, the surjections into $(a_0 =_A a_0)$ and $(c_0 =_C c_0)$.
 
+%\textcolor{red}{Note that this construction defines a mapping between particular surjections, so you may be able to get away without truncating (?).}
 
-To construct a surjection $\otimes_{k^{\prime\prime}} \sone \surj B$, $k^{\prime\prime} = k\pr + k^{\prime \prime \prime}$ \textcolor{red}{recognize that $B = \Sigma_{c : C} A$}. Then the surjection $\otimes_{k^{\prime\prime}} \sone = \otimes_{k^{\prime}} \sone \times \otimes_{k^{\prime\prime\prime}} \sone \surj B$ is just given by $(s_1,s_2) \mapsto (\pi_A(s_1), \pi_C(s_2))$, where $\pi_A,\pi_C$ are, respectively, the surjections onto $A$ and $C$.
-
-\textcolor{red}{Note that this construction defines a mapping between particular surjections, so you may be able to get away without truncating (?).}
-
-\begin{lemma}
-Pullbacks preserve epis and monos.
+\begin{lemma}\label{lemma: pullback}
+Pullbacks preserve surjections and embeddings.
 \end{lemma}
+\begin{proof}
+We consider a pullback square 
 
-\begin{lemma}
+\begin{center}
+\begin{tikzcd}
+    A \times_B C \arrow[r,"f^*"] \arrow[d,swap,"g^*"] & C \arrow[d, "g"] \\
+    A \arrow[r,swap,"f"] & B
+\end{tikzcd}
+\end{center}
+First consider $g$ and $g^*$, and suppose that $g$ is a surjection. We show that $g^*$ is a surjection. We use $ \textrm{is-surj} : (X \to Y) \to \textrm{hProp}$ defined by $\phi \mapsto \Pi_{y : Y} || \textrm{fib}_\phi(y) ||_{-1}$. To inhabit is-surj$(g^*)$, take $a : A$. An element of the fiber of $a$ over $g^*$ will have the form $(a,b,\omega_{(a,b)})$. Since $g$ surjects, there is some $b : B$ with $\omega: f(a) = g(b)$. Since we only need to show mere inhabitation, the choice of $b$ doesn't matter and we have our preimage.
+
+Now consider $f^*$, and suppose that $f$ is an embedding. We want to show is-embed$(\phi) \defequiv (\Pi_{x_1, x_2} f^*(x_1) = f^*(x_2)) \to x_1 = x_2) \times \textrm{is-equiv(ap}_{f^*})$ with $x_i \defequiv (a_i, b_i, \omega_i)$. A path in $f^*(x_1) = f^*(x_2)$ is precisely a path in $b_1 = b_2$ and to get a path $x_1 = x_2$ we only need a path $a_1 = a_2$. Note that we have a path in $f(a_1) = f(a_2)$ from paths in this horseshoe of equalities
+\begin{center}
+\begin{tikzcd}
+    f(a_1) \equiv f \circ g^* (x_1) \arrow[equal, r] & g \circ f^* (x_1) \equiv g(b_1) \arrow[d,equal] \\
+    f(a_2) \equiv f \circ g^*(x_2) \arrow[r,equal] & g \circ f^*(x_2) \equiv g(b_2) 
+\end{tikzcd}
+\end{center}
+where the horizontal paths come from the $\omega_i$ and the vertical equality comes from the path in $b_1 = b_2$. Since $f$ is an embedding, this path in $f(a_1) = f(a_2)$ gives us a path in $a_1 = a_2$ and we have the first part of the embedding.
+
+Now we need to show is-equiv($\ap{f^*})$. Note that $$\ap{f^*} : (a_1,b_1,\omega_1) = (a_2,b_2,\omega_2) \to b_1 = b_2 $$ is a projection map, so we have to find an inverse. We start with a path $p_b : b_1 = b_2$. We first must find a path $p_a: a_1 = a_2$. Since $\ap{f}$ is an equivalence, finding a path in $a_1 = a_2$ is equivalent to finding a path in $f(a_1) = f(a_2)$. We construct one via:
+\begin{center}
+\begin{tikzcd}
+    f(a_1) \arrow[equal,r,"\omega_1"] & g(b_1) \arrow[d,equal,"\ap{g}(p_b)"] \\
+    f(a_2) \arrow[r,equal,"\omega_2",swap] & g(b_2)
+\end{tikzcd}
+\end{center}
+We have the horizontal maps by assumption and the vertical map given by $\ap{g}(p_b)$. This gives a path $p_a : f(a_1) = f(a_2)$. The commuting square given by inserting $p_a$ in the above diagram gives us a proof $\omega_{(a,b)}$.
+
+It is clear that $\ap{f^*} \circ \ap{f^*}\inv = \id_{b_1 = b_2}$. To complete the proof we only need show that $\ap{f^*}\inv \circ \ap{f^*} = \id_{(a_1,b_1,\omega_1) = (a_2,b_2,\omega_2)}$. Let us consider the image of $(p,q,\omega)$ under $\ap{f^*}\inv \circ \ap{f^*}$, which we call $(p\pr,q\pr,\omega\pr)$.
+
+We need to show $p = p\pr, q = q\pr,$ and $\omega = \omega\pr.$ The second of these is definitional. Then showing $p = p\pr$ is equivalent to showing $\ap{f}(p) = \ap{f}(p\pr)$. By definition, the type $\ap{f}(p\pr) = \omega_1 \cdot \ap{g}(p_b) \cdot \omega_2$ is inhabited. Similarly, $\omega$ gives an inhabitant of $\ap{f}(p) = \omega_1 \cdot \ap{g}(q) \cdot \omega_2$, thus the type $\ap{f}(p) = \ap{f}(p\pr)$ is inhabited, as desired. By the same arguments, the commuting squares giving $\omega$ and $\omega\pr$ are equal, and we have our result.
+\end{proof}
+
+\begin{lemma}\label{lemma: subgroup of free abelian}
 A subgroup of a free abelian group is free.
 \end{lemma}
 
-\begin{lemma}
-If $B$ is an extension of $C$ by $A$, then $B = \Sigma_{c : C} A$.
+\begin{lemma}\label{lemma: group extension}
+If there is a short exact sequence of abelian groups \TODO{Abelian might be necessary for the SESs.} of the form $$ \1 \to A \to B \to C \to \1$$then $(b_0 =_B b_0) = \Sigma_{c : (c_0 =_C c_0)} (a_0 =_A a_0)$.
 \end{lemma}
 
 \section{Free Groups}
-Note that none of the proof above used the fact that anything was abelian, except in the existence of a surjection. This should generalize to other things, then, such as free groups, or anything defined freely by use of a surjection. This are of interest in algebraic structures.
+Note that none of the proof above used the fact that anything was abelian,\TODO{It just might not be interesting if the groups aren't abelian.} except in the existence of a surjection. This should generalize to other things, then, such as free groups, or anything defined freely by use of a surjection. This are of interest in algebraic structures.
 
 \section{Next}
 \begin{itemize}
